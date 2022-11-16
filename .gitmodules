@@ -13,6 +13,3 @@
 [submodule "robber-node"]
 	path = robber-node
 	url = https://github.com/joobih/robber-node.git
-[submodule "robber-gum"]
-	path = robber-gum
-	url = https://github.com/joobih/robber-gum.git
