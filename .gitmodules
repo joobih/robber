@@ -10,3 +10,6 @@
 [submodule "robber-python"]
 	path = robber-python
 	url = https://github.com/joobih/robber-python.git
+[submodule "robber-node"]
+	path = robber-node
+	url = https://github.com/joobih/robber-node.git
