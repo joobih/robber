@@ -4,3 +4,6 @@
 [submodule "robber-swift"]
 	path = robber-swift
 	url = https://github.com/joobih/robber-swift.git
+[submodule "robber-qml"]
+	path = robber-qml
+	url = https://github.com/joobih/robber-qml.git
