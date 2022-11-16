@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -n "$FRIDA_BUILD_ARCH" ]; then
-  echo $FRIDA_BUILD_ARCH
+if [ -n "$ROBBER_BUILD_ARCH" ]; then
+  echo $ROBBER_BUILD_ARCH
   exit 0
 fi
 

@@ -19,7 +19,7 @@ if platform.system() == 'Windows':
     import winenv
 
 
-BUNDLE_URL = "https://build.frida.re/deps/{version}/{filename}"
+BUNDLE_URL = "https://build.robber.re/deps/{version}/{filename}"
 
 RELENG_DIR = Path(__file__).parent.resolve()
 DEPS_MK_PATH = RELENG_DIR / "deps.mk"
@@ -185,7 +185,7 @@ def roll(bundle: Bundle, host: str, activate: bool):
         if e.code != 404:
             raise CommandError("network error") from e
 
-    s3_url = "s3://build.frida.re/deps/{version}/{filename}".format(version=version, filename=filename)
+    s3_url = "s3://build.robber.re/deps/{version}/{filename}".format(version=version, filename=filename)
 
     # We will most likely need to build, but let's check S3 to be certain.
     r = subprocess.run(["aws", "s3", "ls", s3_url], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8')
@@ -214,7 +214,7 @@ def roll(bundle: Bundle, host: str, activate: bool):
                            gnu_make,
                            "-C", ROOT_DIR,
                            "-f", "Makefile.{}.mk".format(bundle.name.lower()),
-                           "FRIDA_HOST=" + host,
+                           "ROBBER_HOST=" + host,
                        ],
                        check=True)
 
@@ -256,7 +256,7 @@ def bump():
 
     for identifier, pkg in params.packages.items():
         url = pkg.url
-        if not url.startswith("https://github.com/frida/"):
+        if not url.startswith("https://github.com/robber/"):
             continue
 
         print(f"*** Checking {pkg.name}")
@@ -264,7 +264,7 @@ def bump():
         repo_name = url.split("/")[-1][:-4]
         branch_name = "next" if repo_name == "capstone" else "main"
 
-        url = f"https://api.github.com/repos/frida/{repo_name}/commits/main"
+        url = f"https://api.github.com/repos/robber/{repo_name}/commits/main"
         request = urllib.request.Request(url)
         request.add_header("Authorization", auth_header)
         with urllib.request.urlopen(request) as r:
@@ -323,14 +323,14 @@ def read_dependency_parameters(host_defines: Dict[str, str] = {}) -> DependencyP
                 parse_array_value(raw_params[name + "_options"], raw_params))
 
     return DependencyParameters(
-            raw_params["frida_deps_version"],
-            raw_params["frida_bootstrap_version"],
+            raw_params["robber_deps_version"],
+            raw_params["robber_bootstrap_version"],
             packages)
 
 
 def configure_bootstrap_version(version):
     deps_content = DEPS_MK_PATH.read_text(encoding='utf-8')
-    deps_content = re.sub("^frida_bootstrap_version = (.+)$", "frida_bootstrap_version = {}".format(version),
+    deps_content = re.sub("^robber_bootstrap_version = (.+)$", "robber_bootstrap_version = {}".format(version),
                           deps_content, flags=re.MULTILINE)
     DEPS_MK_PATH.write_bytes(deps_content.encode('utf-8'))
 

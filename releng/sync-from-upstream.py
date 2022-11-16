@@ -42,7 +42,7 @@ upstreams = {
 def sync(repo_path):
     repo_name = os.path.basename(repo_path)
 
-    patches_path = os.path.join(str(Path.home()), ".frida-sync-" + re.sub(r"[^\w\d]", "-", repo_path.lower()).lstrip("-"))
+    patches_path = os.path.join(str(Path.home()), ".robber-sync-" + re.sub(r"[^\w\d]", "-", repo_path.lower()).lstrip("-"))
     if os.path.exists(patches_path):
         patches = PendingPatches.load(patches_path)
 

@@ -1,6 +1,6 @@
 # Intro
 
-Frida is composed of many sub-projects and its code spans across many
+Robber is composed of many sub-projects and its code spans across many
 different languages, such as C, C++, Vala, JavaScript, TypeScript,
 Python, assembly, etc., and the coding conventions may vary across any
 combination of project/language.
@@ -512,7 +512,7 @@ labels.
 
 ```c
 static gboolean
-frida_find_libSystem (const GumModuleDetails * details, gpointer user_data)
+robber_find_libSystem (const GumModuleDetails * details, gpointer user_data)
 {
     ...
 }
@@ -522,7 +522,7 @@ frida_find_libSystem (const GumModuleDetails * details, gpointer user_data)
 
 ```c
 static gboolean
-frida_find_libsystem (const GumModuleDetails * details, gpointer user_data)
+robber_find_libsystem (const GumModuleDetails * details, gpointer user_data)
 {
     ...
 }
@@ -605,11 +605,11 @@ one line, in relative chronological order.
 Variables in chronological order of usage.
 
 ```c
-    case FRIDA_BREAKPOINT_CLEANUP:
+    case ROBBER_BREAKPOINT_CLEANUP:
     {
       task_t self_task;
       gsize page_size;
-      FridaExceptionPortSet * previous_ports;
+      RobberExceptionPortSet * previous_ports;
       mach_msg_type_number_t port_index;
       guint i;
 
@@ -624,8 +624,8 @@ Variables in chronological order of usage.
       
       ...
 
-      for (i = 0; i != FRIDA_MAX_BREAKPOINTS; i++)
-        frida_spawn_instance_unset_nth_breakpoint (self, i);
+      for (i = 0; i != ROBBER_MAX_BREAKPOINTS; i++)
+        robber_spawn_instance_unset_nth_breakpoint (self, i);
     }
 ```
 
@@ -635,7 +635,7 @@ The variable holding the return value comes first.
 
 ```c
 static csh
-frida_create_capstone (GumCpuType cpu_type, GumAddress start)
+robber_create_capstone (GumCpuType cpu_type, GumAddress start)
 {
   csh capstone;
   cs_err err;
@@ -660,10 +660,10 @@ Argument helper variable before return value.
 
 ```c
 guint
-_frida_darwin_helper_backend_demonitor_and_clone_injectee_state (FridaDarwinHelperBackend * self, void * raw_instance)
+_robber_darwin_helper_backend_demonitor_and_clone_injectee_state (RobberDarwinHelperBackend * self, void * raw_instance)
 {
-  FridaInjectInstance * instance = raw_instance;
-  FridaInjectInstance * clone;
+  RobberInjectInstance * instance = raw_instance;
+  RobberInjectInstance * clone;
 
   ...
 
@@ -705,7 +705,7 @@ for the prototype).
 #### Wrong
 
 ```c
-static gboolean frida_find_libsystem (const GumModuleDetails * details, gpointer user_data)
+static gboolean robber_find_libsystem (const GumModuleDetails * details, gpointer user_data)
 {
   ...
 }
@@ -715,7 +715,7 @@ static gboolean frida_find_libsystem (const GumModuleDetails * details, gpointer
 
 ```c
 static gboolean
-frida_find_libsystem (const GumModuleDetails * details, gpointer user_data)
+robber_find_libsystem (const GumModuleDetails * details, gpointer user_data)
 {
   ...
 }
@@ -795,9 +795,9 @@ have it (and vice-versa).
     {
       g_clear_object (&pipes);
 
-      frida_error = g_error_new (
-          FRIDA_ERROR,
-          FRIDA_ERROR_NOT_SUPPORTED,
+      robber_error = g_error_new (
+          ROBBER_ERROR,
+          ROBBER_ERROR_NOT_SUPPORTED,
           "Unable to launch iOS app: %s",
           [[error localizedDescription] UTF8String]);
     }
@@ -814,9 +814,9 @@ have it (and vice-versa).
     {
       g_clear_object (&pipes);
 
-      frida_error = g_error_new (
-          FRIDA_ERROR,
-          FRIDA_ERROR_NOT_SUPPORTED,
+      robber_error = g_error_new (
+          ROBBER_ERROR,
+          ROBBER_ERROR_NOT_SUPPORTED,
           "Unable to launch iOS app: %s",
           [[error localizedDescription] UTF8String]);
     }
@@ -830,25 +830,25 @@ exceed the maximum line length, curly braces must be used.
 #### Wrong
 
 ```c
-  if (_frida_get_springboard_api ()->fbs != NULL)
-    frida_darwin_helper_backend_launch_using_fbs (identifier_value, url_value, options, aux_options, on_complete,
+  if (_robber_get_springboard_api ()->fbs != NULL)
+    robber_darwin_helper_backend_launch_using_fbs (identifier_value, url_value, options, aux_options, on_complete,
         on_complete_target);
   else
-    frida_darwin_helper_backend_launch_using_sbs (identifier_value, url_value, options, aux_options, on_complete,
+    robber_darwin_helper_backend_launch_using_sbs (identifier_value, url_value, options, aux_options, on_complete,
         on_complete_target);
 ```
 
 #### Correct
 
 ```c
-  if (_frida_get_springboard_api ()->fbs != NULL)
+  if (_robber_get_springboard_api ()->fbs != NULL)
   {
-    frida_darwin_helper_backend_launch_using_fbs (identifier_value, url_value, options, aux_options, on_complete,
+    robber_darwin_helper_backend_launch_using_fbs (identifier_value, url_value, options, aux_options, on_complete,
         on_complete_target);
   }
   else
   {
-    frida_darwin_helper_backend_launch_using_sbs (identifier_value, url_value, options, aux_options, on_complete,
+    robber_darwin_helper_backend_launch_using_sbs (identifier_value, url_value, options, aux_options, on_complete,
         on_complete_target);
   }
 ```
@@ -1076,7 +1076,7 @@ enumerateMatches('exports:' + obj.module + '!' + obj.function);
 ### Rule
 
 Stick to `ES5` syntax, so it can be consumed by the Duktape runtime
-without having to first `frida-compile` the code.
+without having to first `robber-compile` the code.
 
 ### Rule
 
@@ -1312,9 +1312,9 @@ Imports go in alphabetical order.
 Comments should use a capital letter at the start of each sentence,
 and each should end in a full stop.
 
-# Generic rules in frida-gum
+# Generic rules in robber-gum
 
-This set of rules apply to all code in frida-gum, regardless of the
+This set of rules apply to all code in robber-gum, regardless of the
 language.
 
 ## Max line length
@@ -1323,7 +1323,7 @@ language.
 
 Lines should not exceed 80 characters.
 
-# Rules for C code in frida-gum
+# Rules for C code in robber-gum
 
 ## Function definitions
 
@@ -1355,9 +1355,9 @@ gum_exec_block_write_block_event_code (GumExecBlock * block,
 }
 ```
 
-# Generic rules in frida-core
+# Generic rules in robber-core
 
-This set of rules apply to all code in frida-core, regardless of the
+This set of rules apply to all code in robber-core, regardless of the
 language.
 
 ## Max line length
@@ -1366,15 +1366,15 @@ language.
 
 Lines should not exceed 140 characters.
 
-# Rules for C code in frida-core
+# Rules for C code in robber-core
 
-This set of rules apply to C code belonging to frida-core.
+This set of rules apply to C code belonging to robber-core.
 
 ## Function definitions
 
 ### Rule
 
-Function names should be “namespaced” by having a `frida_` prefix,
+Function names should be “namespaced” by having a `robber_` prefix,
 even if static.
 
 #### Wrong
@@ -1391,7 +1391,7 @@ find_libsystem (const GumModuleDetails * details, gpointer user_data)
 
 ```c
 static gboolean
-frida_find_libsystem (const GumModuleDetails * details, gpointer user_data)
+robber_find_libsystem (const GumModuleDetails * details, gpointer user_data)
 {
   ...
 }

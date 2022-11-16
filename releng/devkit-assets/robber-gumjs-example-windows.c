@@ -4,10 +4,10 @@
  * [Runtime Library]
  * Multi-threaded (/MT)
  *
- * Visit https://frida.re to learn more about Frida.
+ * Visit https://robber.re to learn more about Robber.
  */
 
-#include "frida-gumjs.h"
+#include "robber-gumjs.h"
 
 #include <windows.h>
 

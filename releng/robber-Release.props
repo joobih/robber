@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
-    <Import Project="$(SolutionDir)releng\frida.props" />
+    <Import Project="$(SolutionDir)releng\robber.props" />
   </ImportGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <FridaComponentDefines>G_DISABLE_ASSERT;G_DISABLE_CHECKS</FridaComponentDefines>
+    <RobberComponentDefines>G_DISABLE_ASSERT;G_DISABLE_CHECKS</RobberComponentDefines>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

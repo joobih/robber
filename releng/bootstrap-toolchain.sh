@@ -7,9 +7,9 @@ build_machine=$1
 
 releng_path=`dirname $0`
 cd $releng_path/../
-FRIDA_ROOT=`pwd`
+ROBBER_ROOT=`pwd`
 cd -
-FRIDA_BUILD="${FRIDA_BUILD:-$FRIDA_ROOT/build}"
+ROBBER_BUILD="${ROBBER_BUILD:-$ROBBER_ROOT/build}"
 MAKE="${MAKE:-make}"
 
 if ! meson --version >/dev/null 2>&1; then
@@ -34,8 +34,8 @@ fi
 
 "$MAKE" -f Makefile.toolchain.mk deps/.vala-stamp
 
-srcdir="$FRIDA_ROOT/deps/vala"
-builddir="$FRIDA_BUILD/ft-tmp-$build_machine/bootstrap"
+srcdir="$ROBBER_ROOT/deps/vala"
+builddir="$ROBBER_BUILD/ft-tmp-$build_machine/bootstrap"
 
 rm -rf "$builddir"
 mkdir -p "$builddir"
@@ -52,4 +52,4 @@ cd "$builddir/dist"
 ln -s "$(which ninja)" bin/ninja
 ln -s "$(which pkg-config)" bin/pkg-config
 mkdir -p share/aclocal
-tar -cjf "$FRIDA_BUILD/_toolchain-$build_machine.tar.bz2" .
+tar -cjf "$ROBBER_BUILD/_toolchain-$build_machine.tar.bz2" .

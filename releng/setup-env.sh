@@ -7,11 +7,11 @@ build_arch=$($releng_path/detect-arch.sh)
 build_os_arch=$build_os-$build_arch
 build_machine=$build_os_arch
 
-if [ -n "$FRIDA_HOST" ]; then
-  host_os=$(echo -n $FRIDA_HOST | cut -f1 -d"-")
-  host_arch=$(echo -n $FRIDA_HOST | cut -f2 -d"-")
-  host_variant=$(echo -n $FRIDA_HOST | cut -f3 -d"-")
-  host_machine=$FRIDA_HOST
+if [ -n "$ROBBER_HOST" ]; then
+  host_os=$(echo -n $ROBBER_HOST | cut -f1 -d"-")
+  host_arch=$(echo -n $ROBBER_HOST | cut -f2 -d"-")
+  host_variant=$(echo -n $ROBBER_HOST | cut -f3 -d"-")
+  host_machine=$ROBBER_HOST
 else
   host_os=$build_os
   host_arch=$build_arch
@@ -92,9 +92,9 @@ case $host_arch in
 esac
 b_lundef=true
 
-case $FRIDA_ASAN in
+case $ROBBER_ASAN in
   yes|no)
-    enable_asan=$FRIDA_ASAN
+    enable_asan=$ROBBER_ASAN
     ;;
   *)
     enable_asan=no
@@ -110,8 +110,8 @@ else
   exit 1
 fi
 
-if [ -z "$FRIDA_HOST" ]; then
-  echo "Assuming host is $host_machine Set FRIDA_HOST to override."
+if [ -z "$ROBBER_HOST" ]; then
+  echo "Assuming host is $host_machine Set ROBBER_HOST to override."
 fi
 
 if [ "$host_os" == "android" ]; then
@@ -127,7 +127,7 @@ if [ "$host_os" == "android" ]; then
         echo ""
         echo "Unsupported NDK version $ndk_installed_version. Please install NDK r$ndk_required."
         echo ""
-        echo "Frida's SDK - the prebuilt dependencies snapshot - was compiled against r$ndk_required,"
+        echo "Robber's SDK - the prebuilt dependencies snapshot - was compiled against r$ndk_required,"
         echo "and as we have observed the NDK ABI breaking over time, we ask that you install"
         echo "the exact same version."
         echo ""
@@ -135,7 +135,7 @@ if [ "$host_os" == "android" ]; then
         echo "releng/setup-env.sh and adjust the ndk_required variable. Make sure you use"
         echo "a newer NDK, and not an older one. Note that the proper solution is to rebuild"
         echo "the SDK against your NDK by running:"
-        echo "  make -f Makefile.sdk.mk FRIDA_HOST=android-arm"
+        echo "  make -f Makefile.sdk.mk ROBBER_HOST=android-arm"
         echo "If you do this and it works well for you, please let us know so we can upgrade"
         echo "the upstream SDK version."
         echo ""
@@ -155,48 +155,48 @@ if [ "$host_os" == "qnx" ]; then
   fi
 fi
 
-if [ -n "$FRIDA_ENV_NAME" ]; then
-  frida_env_name_prefix=${FRIDA_ENV_NAME}-
+if [ -n "$ROBBER_ENV_NAME" ]; then
+  robber_env_name_prefix=${ROBBER_ENV_NAME}-
 else
-  frida_env_name_prefix=
+  robber_env_name_prefix=
 fi
 
 pushd $releng_path/../ > /dev/null
-FRIDA_ROOT=`pwd`
+ROBBER_ROOT=`pwd`
 popd > /dev/null
-FRIDA_BUILD="${FRIDA_BUILD:-$FRIDA_ROOT/build}"
-FRIDA_RELENG="$FRIDA_ROOT/releng"
-FRIDA_PREFIX="${FRIDA_PREFIX:-$FRIDA_BUILD/${FRIDA_ENV_NAME:-frida}-${host_machine}}"
-FRIDA_TOOLROOT="$FRIDA_BUILD/${frida_env_name_prefix}toolchain-${build_machine}"
-FRIDA_SDKROOT="$FRIDA_BUILD/${frida_env_name_prefix}sdk-${host_machine}"
+ROBBER_BUILD="${ROBBER_BUILD:-$ROBBER_ROOT/build}"
+ROBBER_RELENG="$ROBBER_ROOT/releng"
+ROBBER_PREFIX="${ROBBER_PREFIX:-$ROBBER_BUILD/${ROBBER_ENV_NAME:-robber}-${host_machine}}"
+ROBBER_TOOLROOT="$ROBBER_BUILD/${robber_env_name_prefix}toolchain-${build_machine}"
+ROBBER_SDKROOT="$ROBBER_BUILD/${robber_env_name_prefix}sdk-${host_machine}"
 
-if [ -n "$FRIDA_TOOLCHAIN_VERSION" ]; then
-  toolchain_version=$FRIDA_TOOLCHAIN_VERSION
+if [ -n "$ROBBER_TOOLCHAIN_VERSION" ]; then
+  toolchain_version=$ROBBER_TOOLCHAIN_VERSION
 else
-  toolchain_version=$(grep "frida_deps_version =" "$FRIDA_RELENG/deps.mk" | awk '{ print $NF }')
+  toolchain_version=$(grep "robber_deps_version =" "$ROBBER_RELENG/deps.mk" | awk '{ print $NF }')
 fi
-if [ -n "$FRIDA_SDK_VERSION" ]; then
-  sdk_version=$FRIDA_SDK_VERSION
+if [ -n "$ROBBER_SDK_VERSION" ]; then
+  sdk_version=$ROBBER_SDK_VERSION
 else
-  sdk_version=$(grep "frida_deps_version =" "$FRIDA_RELENG/deps.mk" | awk '{ print $NF }')
+  sdk_version=$(grep "robber_deps_version =" "$ROBBER_RELENG/deps.mk" | awk '{ print $NF }')
 fi
 if [ "$enable_asan" == "yes" ]; then
   sdk_version="$sdk_version-asan"
 fi
 
-if ! grep -Eq "^$toolchain_version\$" "$FRIDA_TOOLROOT/VERSION.txt" 2>/dev/null; then
-  rm -rf "$FRIDA_TOOLROOT"
-  mkdir -p "$FRIDA_TOOLROOT"
+if ! grep -Eq "^$toolchain_version\$" "$ROBBER_TOOLROOT/VERSION.txt" 2>/dev/null; then
+  rm -rf "$ROBBER_TOOLROOT"
+  mkdir -p "$ROBBER_TOOLROOT"
 
   filename=toolchain-$build_machine.tar.bz2
 
-  local_toolchain=$FRIDA_BUILD/_$filename
+  local_toolchain=$ROBBER_BUILD/_$filename
   if [ -f $local_toolchain ]; then
     echo -e "Deploying local toolchain \\033[1m$(basename $local_toolchain)\\033[0m..."
-    tar -C "$FRIDA_TOOLROOT" -xjf $local_toolchain || exit 1
+    tar -C "$ROBBER_TOOLROOT" -xjf $local_toolchain || exit 1
   else
     echo -e "Downloading and deploying toolchain for \\033[1m$build_machine\\033[0m..."
-    $download_command "https://build.frida.re/deps/$toolchain_version/$filename" | tar -C "$FRIDA_TOOLROOT" -xjf -
+    $download_command "https://build.robber.re/deps/$toolchain_version/$filename" | tar -C "$ROBBER_TOOLROOT" -xjf -
     if [ $? -ne 0 ]; then
       echo ""
       echo "Bummer. It seems we don't have a prebuilt toolchain for your system."
@@ -210,29 +210,29 @@ if ! grep -Eq "^$toolchain_version\$" "$FRIDA_TOOLROOT/VERSION.txt" 2>/dev/null;
     fi
   fi
 
-  for template in $(find $FRIDA_TOOLROOT -name "*.frida.in"); do
-    target=$(echo $template | sed 's,\.frida\.in$,,')
+  for template in $(find $ROBBER_TOOLROOT -name "*.robber.in"); do
+    target=$(echo $template | sed 's,\.robber\.in$,,')
     cp -a "$template" "$target"
     sed \
-      -e "s,@FRIDA_TOOLROOT@,$FRIDA_TOOLROOT,g" \
-      -e "s,@FRIDA_RELENG@,$FRIDA_RELENG,g" \
+      -e "s,@ROBBER_TOOLROOT@,$ROBBER_TOOLROOT,g" \
+      -e "s,@ROBBER_RELENG@,$ROBBER_RELENG,g" \
       "$template" > "$target"
   done
 fi
 
-if [ "$FRIDA_ENV_SDK" != 'none' ] && ! grep -Eq "^$sdk_version\$" "$FRIDA_SDKROOT/VERSION.txt" 2>/dev/null; then
-  rm -rf "$FRIDA_SDKROOT"
-  mkdir -p "$FRIDA_SDKROOT"
+if [ "$ROBBER_ENV_SDK" != 'none' ] && ! grep -Eq "^$sdk_version\$" "$ROBBER_SDKROOT/VERSION.txt" 2>/dev/null; then
+  rm -rf "$ROBBER_SDKROOT"
+  mkdir -p "$ROBBER_SDKROOT"
 
   filename=sdk-$host_machine.tar.bz2
 
-  local_sdk=$FRIDA_BUILD/$filename
+  local_sdk=$ROBBER_BUILD/$filename
   if [ -f $local_sdk ]; then
     echo -e "Deploying local SDK \\033[1m$(basename $local_sdk)\\033[0m..."
-    tar -C "$FRIDA_SDKROOT" -xjf $local_sdk || exit 1
+    tar -C "$ROBBER_SDKROOT" -xjf $local_sdk || exit 1
   else
     echo -e "Downloading and deploying SDK for \\033[1m$host_machine\\033[0m..."
-    $download_command "https://build.frida.re/deps/$sdk_version/$filename" | tar -C "$FRIDA_SDKROOT" -xjf - 2> /dev/null
+    $download_command "https://build.robber.re/deps/$sdk_version/$filename" | tar -C "$ROBBER_SDKROOT" -xjf - 2> /dev/null
     if [ $? -ne 0 ]; then
       echo ""
       echo "Bummer. It seems we don't have a prebuilt SDK for your system."
@@ -246,17 +246,17 @@ if [ "$FRIDA_ENV_SDK" != 'none' ] && ! grep -Eq "^$sdk_version\$" "$FRIDA_SDKROO
     fi
   fi
 
-  for template in $(find $FRIDA_SDKROOT -name "*.frida.in"); do
-    target=$(echo $template | sed 's,\.frida\.in$,,')
+  for template in $(find $ROBBER_SDKROOT -name "*.robber.in"); do
+    target=$(echo $template | sed 's,\.robber\.in$,,')
     cp -a "$template" "$target"
     sed \
-      -e "s,@FRIDA_SDKROOT@,$FRIDA_SDKROOT,g" \
-      -e "s,@FRIDA_RELENG@,$FRIDA_RELENG,g" \
+      -e "s,@ROBBER_SDKROOT@,$ROBBER_SDKROOT,g" \
+      -e "s,@ROBBER_RELENG@,$ROBBER_RELENG,g" \
       "$template" > "$target"
   done
 fi
 
-if [ -f "$FRIDA_SDKROOT/lib/c++/libc++.a" ] && [ $host_os != watchos ]; then
+if [ -f "$ROBBER_SDKROOT/lib/c++/libc++.a" ] && [ $host_os != watchos ]; then
   have_static_libcxx=yes
 else
   have_static_libcxx=no
@@ -321,7 +321,7 @@ read_toolchain_variable ()
   local env_var_name=$2
   local fallback_value=$3
 
-  if [ $host_machine == $build_machine ] && [ "$FRIDA_CROSS" == yes ]; then
+  if [ $host_machine == $build_machine ] && [ "$ROBBER_CROSS" == yes ]; then
     local contextual_env_var_name=${env_var_name}_FOR_BUILD
   else
     local contextual_env_var_name=${env_var_name}
@@ -330,25 +330,25 @@ read_toolchain_variable ()
   eval "$result_var_name=(${!contextual_env_var_name:-$fallback_value})"
 }
 
-mkdir -p "$FRIDA_BUILD"
+mkdir -p "$ROBBER_BUILD"
 
 case $host_os in
   linux)
-    if [ -n "$FRIDA_LIBC" ]; then
-      frida_libc=$FRIDA_LIBC
+    if [ -n "$ROBBER_LIBC" ]; then
+      robber_libc=$ROBBER_LIBC
     else
       case $host_arch in
         arm|armbe8)
-          frida_libc=gnueabi
+          robber_libc=gnueabi
           ;;
         armhf)
-          frida_libc=gnueabihf
+          robber_libc=gnueabihf
           ;;
         mips64*)
-          frida_libc=gnuabi64
+          robber_libc=gnuabi64
           ;;
         *)
-          frida_libc=gnu
+          robber_libc=gnu
           ;;
       esac
     fi
@@ -365,53 +365,53 @@ case $host_os in
         ;;
       arm)
         common_flags+=("-march=armv5t")
-        toolprefix="arm-linux-$frida_libc-"
+        toolprefix="arm-linux-$robber_libc-"
 
         host_cpu="armv5t"
         ;;
       armbe8)
         common_flags+=("-march=armv6" "-mbe8")
-        toolprefix="armeb-linux-$frida_libc-"
+        toolprefix="armeb-linux-$robber_libc-"
 
         host_cpu="armv6t"
         ;;
       armhf)
         common_flags+=("-march=armv7-a")
-        toolprefix="arm-linux-$frida_libc-"
+        toolprefix="arm-linux-$robber_libc-"
 
         host_cpu="armv7a"
         ;;
       arm64)
         common_flags+=("-march=armv8-a")
-        toolprefix="aarch64-linux-$frida_libc-"
+        toolprefix="aarch64-linux-$robber_libc-"
         ;;
       mips)
         common_flags+=("-march=mips1" "-mfp32")
-        toolprefix="mips-linux-$frida_libc-"
+        toolprefix="mips-linux-$robber_libc-"
 
         host_cpu="mips1"
         ;;
       mipsel)
         common_flags+=("-march=mips1" "-mfp32")
-        toolprefix="mipsel-linux-$frida_libc-"
+        toolprefix="mipsel-linux-$robber_libc-"
 
         host_cpu="mips1"
         ;;
       mips64)
         common_flags+=("-march=mips64r2" "-mabi=64")
-        toolprefix="mips64-linux-$frida_libc-"
+        toolprefix="mips64-linux-$robber_libc-"
 
         host_cpu="mips64r2"
         ;;
       mips64el)
         common_flags+=("-march=mips64r2" "-mabi=64")
-        toolprefix="mips64el-linux-$frida_libc-"
+        toolprefix="mips64el-linux-$robber_libc-"
 
         host_cpu="mips64r2"
         ;;
       s390x)
         common_flags+=("-march=z10" "-m64")
-        toolprefix="s390x-linux-$frida_libc-"
+        toolprefix="s390x-linux-$robber_libc-"
         ;;
     esac
 
@@ -584,8 +584,8 @@ case $host_os in
     fi
 
     if [ $have_static_libcxx = yes ] && [ $enable_asan = no ]; then
-      cxx_like_flags+=("-nostdinc++" "-isystem$FRIDA_SDKROOT/include/c++")
-      cxx_link_flags+=("-nostdlib++" "-L$FRIDA_SDKROOT/lib/c++" "-lc++" "-lc++abi")
+      cxx_like_flags+=("-nostdinc++" "-isystem$ROBBER_SDKROOT/include/c++")
+      cxx_link_flags+=("-nostdlib++" "-L$ROBBER_SDKROOT/lib/c++" "-lc++" "-lc++abi")
     fi
 
     ;;
@@ -651,9 +651,9 @@ case $host_os in
       host_tooltriplet="$host_compiler_triplet"
     fi
 
-    elf_cleaner=$FRIDA_TOOLROOT/bin/termux-elf-cleaner
+    elf_cleaner=$ROBBER_TOOLROOT/bin/termux-elf-cleaner
 
-    cc_wrapper=$FRIDA_BUILD/${FRIDA_ENV_NAME:-frida}-${host_machine}-clang
+    cc_wrapper=$ROBBER_BUILD/${ROBBER_ENV_NAME:-robber}-${host_machine}-clang
     sed \
         -e "s,@driver@,${android_toolroot}/bin/clang,g" \
         -e "s,@ndkroot@,$ANDROID_NDK_ROOT,g" \
@@ -666,10 +666,10 @@ case $host_os in
         -e "s,@clang_arch@,$host_clang_arch,g" \
         -e "s,@cxxlibs@,$host_cxxlibs,g" \
         -e "s,@elf_cleaner@,$elf_cleaner,g" \
-        "$FRIDA_RELENG/driver-wrapper-android.sh.in" > "$cc_wrapper"
+        "$ROBBER_RELENG/driver-wrapper-android.sh.in" > "$cc_wrapper"
     chmod +x "$cc_wrapper"
 
-    cxx_wrapper=$FRIDA_BUILD/${FRIDA_ENV_NAME:-frida}-${host_machine}-clang++
+    cxx_wrapper=$ROBBER_BUILD/${ROBBER_ENV_NAME:-robber}-${host_machine}-clang++
     sed \
         -e "s,@driver@,${android_toolroot}/bin/clang++,g" \
         -e "s,@ndkroot@,$ANDROID_NDK_ROOT,g" \
@@ -682,7 +682,7 @@ case $host_os in
         -e "s,@clang_arch@,$host_clang_arch,g" \
         -e "s,@cxxlibs@,$host_cxxlibs,g" \
         -e "s,@elf_cleaner@,$elf_cleaner,g" \
-        "$FRIDA_RELENG/driver-wrapper-android.sh.in" > "$cxx_wrapper"
+        "$ROBBER_RELENG/driver-wrapper-android.sh.in" > "$cxx_wrapper"
     chmod +x "$cxx_wrapper"
 
     cc=("$cc_wrapper")
@@ -788,23 +788,23 @@ case $host_os_arch in
     ;;
 esac
 
-if [ "$FRIDA_ENV_SDK" != 'none' ]; then
-  c_like_flags+=("-include" "$FRIDA_ROOT/build/frida-version.h")
+if [ "$ROBBER_ENV_SDK" != 'none' ]; then
+  c_like_flags+=("-include" "$ROBBER_ROOT/build/robber-version.h")
 fi
 
-if [ -n "$FRIDA_EXTRA_LDFLAGS" ]; then
-  linker_flags+=("$FRIDA_EXTRA_LDFLAGS")
+if [ -n "$ROBBER_EXTRA_LDFLAGS" ]; then
+  linker_flags+=("$ROBBER_EXTRA_LDFLAGS")
 fi
 
-vala_api_version=$(ls -1 "$FRIDA_TOOLROOT/share" | grep "vala-" | cut -f2 -d"-")
-valac=("$FRIDA_TOOLROOT/bin/valac-$vala_api_version" "--target-glib=2.56")
-valac+=("--vapidir=$FRIDA_PREFIX/share/vala/vapi")
-if [ "$FRIDA_ENV_SDK" != 'none' ]; then
-  valac+=("--vapidir=$FRIDA_SDKROOT/share/vala/vapi")
+vala_api_version=$(ls -1 "$ROBBER_TOOLROOT/share" | grep "vala-" | cut -f2 -d"-")
+valac=("$ROBBER_TOOLROOT/bin/valac-$vala_api_version" "--target-glib=2.56")
+valac+=("--vapidir=$ROBBER_PREFIX/share/vala/vapi")
+if [ "$ROBBER_ENV_SDK" != 'none' ]; then
+  valac+=("--vapidir=$ROBBER_SDKROOT/share/vala/vapi")
 fi
-valac+=("--vapidir=$FRIDA_TOOLROOT/share/vala-$vala_api_version/vapi")
+valac+=("--vapidir=$ROBBER_TOOLROOT/share/vala-$vala_api_version/vapi")
 
-pkg_config_wrapper=$FRIDA_BUILD/${FRIDA_ENV_NAME:-frida}-${host_machine}-pkg-config
+pkg_config_wrapper=$ROBBER_BUILD/${ROBBER_ENV_NAME:-robber}-${host_machine}-pkg-config
 case $host_os in
   freebsd)
     libdatadir=libdata
@@ -813,16 +813,16 @@ case $host_os in
     libdatadir=lib
     ;;
 esac
-pkg_config="$FRIDA_TOOLROOT/bin/pkg-config"
+pkg_config="$ROBBER_TOOLROOT/bin/pkg-config"
 pkg_config_flags="--static"
-pkg_config_path="$FRIDA_PREFIX/$libdatadir/pkgconfig"
-if [ "$FRIDA_ENV_NAME" == 'frida_gir' ]; then
+pkg_config_path="$ROBBER_PREFIX/$libdatadir/pkgconfig"
+if [ "$ROBBER_ENV_NAME" == 'robber_gir' ]; then
   pkg_config_path="$(pkg-config --variable pc_path pkg-config):$pkg_config_path"
   pkg_config_flags=""
 fi
-if [ "$FRIDA_ENV_SDK" != 'none' ]; then
-  pkg_config_flags=" $pkg_config_flags --define-variable=frida_sdk_prefix=$FRIDA_SDKROOT"
-  pkg_config_path="$pkg_config_path:$FRIDA_SDKROOT/$libdatadir/pkgconfig"
+if [ "$ROBBER_ENV_SDK" != 'none' ]; then
+  pkg_config_flags=" $pkg_config_flags --define-variable=robber_sdk_prefix=$ROBBER_SDKROOT"
+  pkg_config_path="$pkg_config_path:$ROBBER_SDKROOT/$libdatadir/pkgconfig"
 fi
 (
   echo "#!/bin/sh"
@@ -831,10 +831,10 @@ fi
 ) > "$pkg_config_wrapper"
 chmod 755 "$pkg_config_wrapper"
 
-env_rc=${FRIDA_BUILD}/${FRIDA_ENV_NAME:-frida}-env-${host_machine}.rc
+env_rc=${ROBBER_BUILD}/${ROBBER_ENV_NAME:-robber}-env-${host_machine}.rc
 
 qemu=""
-if [ $host_machine != $build_machine ] && [ -n "$FRIDA_QEMU_SYSROOT" ]; then
+if [ $host_machine != $build_machine ] && [ -n "$ROBBER_QEMU_SYSROOT" ]; then
   case $host_arch in
     arm|armeabi|armhf)
       qemu=qemu-arm
@@ -852,21 +852,21 @@ if [ $host_machine != $build_machine ] && [ -n "$FRIDA_QEMU_SYSROOT" ]; then
 fi
 
 env_path_sdk=""
-if [ "$FRIDA_ENV_SDK" != 'none' ]; then
-  native_dir="$FRIDA_SDKROOT/bin/$build_machine"
+if [ "$ROBBER_ENV_SDK" != 'none' ]; then
+  native_dir="$ROBBER_SDKROOT/bin/$build_machine"
 
   candidates=("$native_dir")
   case $build_machine in
     linux-x86_64)
-      candidates+=("$FRIDA_SDKROOT/bin/linux-x86")
+      candidates+=("$ROBBER_SDKROOT/bin/linux-x86")
       ;;
     macos-arm64)
-      candidates+=("$FRIDA_SDKROOT/bin/macos-arm64e")
-      candidates+=("$FRIDA_SDKROOT/bin/macos-x86_64")
+      candidates+=("$ROBBER_SDKROOT/bin/macos-arm64e")
+      candidates+=("$ROBBER_SDKROOT/bin/macos-x86_64")
       ;;
     macos-arm64e)
-      candidates+=("$FRIDA_SDKROOT/bin/macos-arm64")
-      candidates+=("$FRIDA_SDKROOT/bin/macos-x86_64")
+      candidates+=("$ROBBER_SDKROOT/bin/macos-arm64")
+      candidates+=("$ROBBER_SDKROOT/bin/macos-x86_64")
       ;;
   esac
 
@@ -878,13 +878,13 @@ if [ "$FRIDA_ENV_SDK" != 'none' ]; then
   done
 
   if [ -z "$env_path_sdk" ] && [ -n "$qemu" ]; then
-    v8_mksnapshot="$FRIDA_SDKROOT/bin/${host_os_arch}/v8-mksnapshot-${host_os_arch}"
+    v8_mksnapshot="$ROBBER_SDKROOT/bin/${host_os_arch}/v8-mksnapshot-${host_os_arch}"
     if [ -f "$v8_mksnapshot" ]; then
       mkdir -p "$native_dir"
       wrapper_script="$native_dir/v8-mksnapshot-${host_os_arch}"
       (
         echo "#!/bin/sh"
-        echo "\"$qemu\" -L \"$FRIDA_QEMU_SYSROOT\" \"$v8_mksnapshot\" \"\$@\""
+        echo "\"$qemu\" -L \"$ROBBER_QEMU_SYSROOT\" \"$v8_mksnapshot\" \"\$@\""
       ) > "$wrapper_script"
       chmod +x "$wrapper_script"
       env_path_sdk="$native_dir"
@@ -893,10 +893,10 @@ if [ "$FRIDA_ENV_SDK" != 'none' ]; then
 fi
 
 (
-  echo "export PATH=\"${env_path_sdk:+"$env_path_sdk:"}${FRIDA_TOOLROOT}/bin:\$PATH\""
+  echo "export PATH=\"${env_path_sdk:+"$env_path_sdk:"}${ROBBER_TOOLROOT}/bin:\$PATH\""
 ) > $env_rc
 
-machine_file=${FRIDA_BUILD}/${FRIDA_ENV_NAME:-frida}-${host_machine}.txt
+machine_file=${ROBBER_BUILD}/${ROBBER_ENV_NAME:-robber}-${host_machine}.txt
 
 array_to_args raw_cc "${cc[@]}"
 array_to_args raw_cxx "${cxx[@]}"
@@ -984,7 +984,7 @@ array_to_args raw_cxx_link_flags "${cxx_link_flags[@]}"
 
   echo "pkgconfig = '$pkg_config_wrapper'"
   if [ -n "$qemu" ]; then
-    echo "exe_wrapper = ['$qemu', '-L', '$FRIDA_QEMU_SYSROOT']"
+    echo "exe_wrapper = ['$qemu', '-L', '$ROBBER_QEMU_SYSROOT']"
   fi
   echo ""
   echo "[built-in options]"

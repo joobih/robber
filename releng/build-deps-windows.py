@@ -575,7 +575,7 @@ def detect_bootstrap_valac() -> str:
 
 
 def package(bundle_ids: List[Bundle], params: DependencyParameters, host: str | None):
-    with tempfile.TemporaryDirectory(prefix="frida-deps") as tempdir:
+    with tempfile.TemporaryDirectory(prefix="robber-deps") as tempdir:
         tempdir = Path(tempdir)
 
         toolchain_filename = "toolchain-windows-x86.exe"
@@ -752,14 +752,14 @@ def ensure_bootstrap_toolchain(bootstrap_version: str) -> SourceState:
         source_state = SourceState.PRISTINE
 
     print(f"Downloading bootstrap toolchain {bootstrap_version}...", flush=True)
-    with urllib.request.urlopen(f"https://build.frida.re/deps/{bootstrap_version}/toolchain-windows-x86.exe") as response, \
+    with urllib.request.urlopen(f"https://build.robber.re/deps/{bootstrap_version}/toolchain-windows-x86.exe") as response, \
             tempfile.NamedTemporaryFile(suffix=".exe", delete=False) as archive:
         shutil.copyfileobj(response, archive)
         toolchain_archive_path = archive.name
 
     print("Extracting bootstrap toolchain...", flush=True)
     try:
-        tempdir = Path(tempfile.mkdtemp(prefix="frida-bootstrap-toolchain"))
+        tempdir = Path(tempfile.mkdtemp(prefix="robber-bootstrap-toolchain"))
         try:
             try:
                 subprocess.check_output([

@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 
-import frida_version
+import robber_version
 from pathlib import Path
 import sys
 
 
 def generate_version_header():
-    v = frida_version.detect()
+    v = robber_version.detect()
 
     header = """\
-#ifndef __FRIDA_VERSION_H__
-#define __FRIDA_VERSION_H__
+#ifndef __ROBBER_VERSION_H__
+#define __ROBBER_VERSION_H__
 
-#define FRIDA_VERSION "{version}"
+#define ROBBER_VERSION "{version}"
 
-#define FRIDA_MAJOR_VERSION {major}
-#define FRIDA_MINOR_VERSION {minor}
-#define FRIDA_MICRO_VERSION {micro}
-#define FRIDA_NANO_VERSION {nano}
+#define ROBBER_MAJOR_VERSION {major}
+#define ROBBER_MINOR_VERSION {minor}
+#define ROBBER_MICRO_VERSION {micro}
+#define ROBBER_NANO_VERSION {nano}
 
 #endif\n""".format(version=v.name, major=v.major, minor=v.minor, micro=v.micro, nano=v.nano)
 

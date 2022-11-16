@@ -1,11 +1,11 @@
-modules = frida-gum frida-core frida-python frida-node frida-tools
+modules = robber-gum robber-core robber-python robber-node robber-tools
 
 all $(MAKECMDGOALS):
 	@build_os=$$(releng/detect-os.sh); \
 	$(MAKE) -f Makefile.$$build_os.mk $(MAKECMDGOALS)
 
 git-submodules:
-	@if [ ! -f frida-core/meson.build ]; then \
+	@if [ ! -f robber-core/meson.build ]; then \
 		git submodule init; \
 		git submodule update --init --recursive; \
 	fi

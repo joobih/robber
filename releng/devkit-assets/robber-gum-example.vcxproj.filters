@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="frida-gumjs-example.c">
+    <ClCompile Include="robber-gum-example.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="frida-gumjs.h">
+    <ClInclude Include="robber-gum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

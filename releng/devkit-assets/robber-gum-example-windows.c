@@ -1,7 +1,15 @@
-#include "frida-gum.h"
+/*
+ * To build, set up your Release configuration like this:
+ *
+ * [Runtime Library]
+ * Multi-threaded (/MT)
+ *
+ * Visit https://robber.re to learn more about Robber.
+ */
 
-#include <fcntl.h>
-#include <unistd.h>
+#include "robber-gum.h"
+
+#include <windows.h>
 
 typedef struct _ExampleListener ExampleListener;
 typedef enum _ExampleHookId ExampleHookId;
@@ -15,8 +23,8 @@ struct _ExampleListener
 
 enum _ExampleHookId
 {
-  EXAMPLE_HOOK_OPEN,
-  EXAMPLE_HOOK_CLOSE
+  EXAMPLE_HOOK_MESSAGE_BEEP,
+  EXAMPLE_HOOK_SLEEP
 };
 
 static void example_listener_iface_init (gpointer g_iface, gpointer iface_data);
@@ -44,24 +52,24 @@ main (int argc,
 
   gum_interceptor_begin_transaction (interceptor);
   gum_interceptor_attach (interceptor,
-      GSIZE_TO_POINTER (gum_module_find_export_by_name (NULL, "open")),
+      GSIZE_TO_POINTER (gum_module_find_export_by_name ("user32.dll", "MessageBeep")),
       listener,
-      GSIZE_TO_POINTER (EXAMPLE_HOOK_OPEN));
+      GSIZE_TO_POINTER (EXAMPLE_HOOK_MESSAGE_BEEP));
   gum_interceptor_attach (interceptor,
-      GSIZE_TO_POINTER (gum_module_find_export_by_name (NULL, "close")),
+      GSIZE_TO_POINTER (gum_module_find_export_by_name ("kernel32.dll", "Sleep")),
       listener,
-      GSIZE_TO_POINTER (EXAMPLE_HOOK_CLOSE));
+      GSIZE_TO_POINTER (EXAMPLE_HOOK_SLEEP));
   gum_interceptor_end_transaction (interceptor);
 
-  close (open ("/etc/hosts", O_RDONLY));
-  close (open ("/etc/fstab", O_RDONLY));
+  MessageBeep (MB_ICONINFORMATION);
+  Sleep (1);
 
   g_print ("[*] listener got %u calls\n", EXAMPLE_LISTENER (listener)->num_calls);
 
   gum_interceptor_detach (interceptor, listener);
 
-  close (open ("/etc/hosts", O_RDONLY));
-  close (open ("/etc/fstab", O_RDONLY));
+  MessageBeep (MB_ICONINFORMATION);
+  Sleep (1);
 
   g_print ("[*] listener still has %u calls\n", EXAMPLE_LISTENER (listener)->num_calls);
 
@@ -82,11 +90,11 @@ example_listener_on_enter (GumInvocationListener * listener,
 
   switch (hook_id)
   {
-    case EXAMPLE_HOOK_OPEN:
-      g_print ("[*] open(\"%s\")\n", (const gchar *) gum_invocation_context_get_nth_argument (ic, 0));
+    case EXAMPLE_HOOK_MESSAGE_BEEP:
+      g_print ("[*] MessageBeep(%u)\n", GPOINTER_TO_UINT (gum_invocation_context_get_nth_argument (ic, 0)));
       break;
-    case EXAMPLE_HOOK_CLOSE:
-      g_print ("[*] close(%d)\n", GPOINTER_TO_INT (gum_invocation_context_get_nth_argument (ic, 0)));
+    case EXAMPLE_HOOK_SLEEP:
+      g_print ("[*] Sleep(%u)\n", GPOINTER_TO_UINT (gum_invocation_context_get_nth_argument (ic, 0)));
       break;
   }
 
@@ -103,7 +111,9 @@ static void
 example_listener_class_init (ExampleListenerClass * klass)
 {
   (void) EXAMPLE_IS_LISTENER;
+#ifndef _MSC_VER
   (void) glib_autoptr_cleanup_ExampleListener;
+#endif
 }
 
 static void

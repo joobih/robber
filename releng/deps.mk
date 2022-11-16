@@ -1,17 +1,17 @@
-frida_deps_version = 20221111
-frida_bootstrap_version = 20220130
+robber_deps_version = 20221111
+robber_bootstrap_version = 20220130
 
 
-frida_base_url = https://github.com/frida
+robber_base_url = https://github.com/robber
 
 
 include releng/system.mk
 
-ifdef FRIDA_HOST
-host_os := $(shell echo $(FRIDA_HOST) | cut -f1 -d"-")
-host_arch := $(shell echo $(FRIDA_HOST) | cut -f2 -d"-")
-host_variant := $(shell echo $(FRIDA_HOST) | cut -f3 -d"-")
-host_machine := $(FRIDA_HOST)
+ifdef ROBBER_HOST
+host_os := $(shell echo $(ROBBER_HOST) | cut -f1 -d"-")
+host_arch := $(shell echo $(ROBBER_HOST) | cut -f2 -d"-")
+host_variant := $(shell echo $(ROBBER_HOST) | cut -f3 -d"-")
+host_machine := $(ROBBER_HOST)
 else
 host_os := $(build_os)
 host_arch := $(build_arch)
@@ -41,7 +41,7 @@ ninja_deps_for_build = \
 
 termux_elf_cleaner_name = termux-elf-cleaner
 termux_elf_cleaner_version = c30d16bc119dae547c51c16e1cab37b08e240f6a
-termux_elf_cleaner_url = $(frida_base_url)/termux-elf-cleaner.git
+termux_elf_cleaner_url = $(robber_base_url)/termux-elf-cleaner.git
 termux_elf_cleaner_recipe = meson
 termux_elf_cleaner_patches = \
 	$(NULL)
@@ -54,7 +54,7 @@ termux_elf_cleaner_deps_for_build = \
 
 libiconv_name = libiconv
 libiconv_version = 9732614f0ee778d58acccd802ffe907a1b0a3e7a
-libiconv_url = $(frida_base_url)/libiconv.git
+libiconv_url = $(robber_base_url)/libiconv.git
 libiconv_recipe = meson
 libiconv_patches = \
 	$(NULL)
@@ -67,7 +67,7 @@ libiconv_deps_for_build = \
 
 zlib_name = zlib
 zlib_version = a912d314d0812518d4bbd715a981e6c9484b550d
-zlib_url = $(frida_base_url)/zlib.git
+zlib_url = $(robber_base_url)/zlib.git
 zlib_recipe = meson
 zlib_patches = \
 	$(NULL)
@@ -80,7 +80,7 @@ zlib_deps_for_build = \
 
 libffi_name = libffi
 libffi_version = 763cf41612c4a9ed98d764a5237acdb9f5337f2d
-libffi_url = $(frida_base_url)/libffi.git
+libffi_url = $(robber_base_url)/libffi.git
 libffi_recipe = meson
 libffi_patches = \
 	$(NULL)
@@ -95,7 +95,7 @@ libffi_deps_for_build = \
 
 pcre2_name = PCRE2
 pcre2_version = b47486922fdc3486499b310dc9cf903449700474
-pcre2_url = $(frida_base_url)/pcre2.git
+pcre2_url = $(robber_base_url)/pcre2.git
 pcre2_recipe = meson
 pcre2_patches = \
 	$(NULL)
@@ -110,7 +110,7 @@ pcre2_deps_for_build = \
 
 selinux_name = SELinux Userspace
 selinux_version = 9c7ba053bb075cace088d268fda400f6bc4ab14c
-selinux_url = $(frida_base_url)/selinux.git
+selinux_url = $(robber_base_url)/selinux.git
 selinux_recipe = meson
 selinux_patches = \
 	$(NULL)
@@ -124,7 +124,7 @@ selinux_deps_for_build = \
 
 glib_name = GLib
 glib_version = 531183c332f874ea2d792c4c250d4599c07e60c0
-glib_url = $(frida_base_url)/glib.git
+glib_url = $(robber_base_url)/glib.git
 glib_recipe = meson
 glib_patches = \
 	$(NULL)
@@ -155,14 +155,14 @@ ifeq ($(host_os), $(filter $(host_os),android qnx))
 glib_options += -Diconv=external
 glib_deps += libiconv
 endif
-ifeq ($(FRIDA_LIBC), uclibc)
+ifeq ($(ROBBER_LIBC), uclibc)
 glib_options += -Diconv=external
 glib_deps += libiconv
 endif
 
 pkg_config_name = pkg-config
 pkg_config_version = 4696795673d1d3dec46b663df48f8cbf66461d14
-pkg_config_url = $(frida_base_url)/pkg-config.git
+pkg_config_url = $(robber_base_url)/pkg-config.git
 pkg_config_recipe = meson
 pkg_config_patches = \
 	$(NULL)
@@ -176,7 +176,7 @@ pkg_config_deps_for_build = \
 
 vala_name = Vala
 vala_version = 62ee2b101a5e5f37ce2a073fdb36e7f6ffb553d1
-vala_url = $(frida_base_url)/vala.git
+vala_url = $(robber_base_url)/vala.git
 vala_recipe = meson
 vala_patches = \
 	$(NULL)
@@ -190,7 +190,7 @@ vala_deps_for_build = \
 
 elfutils_name = elfutils
 elfutils_version = 1284bbc128473aea220337685985d465607fbac8
-elfutils_url = $(frida_base_url)/elfutils.git
+elfutils_url = $(robber_base_url)/elfutils.git
 elfutils_recipe = meson
 elfutils_patches = \
 	$(NULL)
@@ -204,7 +204,7 @@ elfutils_deps_for_build = \
 
 libdwarf_name = libdwarf
 libdwarf_version = 0a5640598201d9a025c33055dde82d6597fcd650
-libdwarf_url = $(frida_base_url)/libdwarf.git
+libdwarf_url = $(robber_base_url)/libdwarf.git
 libdwarf_recipe = meson
 libdwarf_patches = \
 	$(NULL)
@@ -220,7 +220,7 @@ libdwarf_deps_for_build = \
 
 xz_name = XZ Utils
 xz_version = e70f5800ab5001c9509d374dbf3e7e6b866c43fe
-xz_url = $(frida_base_url)/xz.git
+xz_url = $(robber_base_url)/xz.git
 xz_recipe = meson
 xz_patches = \
 	$(NULL)
@@ -234,7 +234,7 @@ xz_deps_for_build = \
 
 brotli_name = Brotli
 brotli_version = 9f51b6b95599466f46678381492834cdbde018f7
-brotli_url = $(frida_base_url)/brotli.git
+brotli_url = $(robber_base_url)/brotli.git
 brotli_recipe = meson
 brotli_patches = \
 	$(NULL)
@@ -247,7 +247,7 @@ brotli_deps_for_build = \
 
 minizip_name = minizip-ng
 minizip_version = 5879653988db0e09f03952dcd94c1a608b4f681c
-minizip_url = $(frida_base_url)/minizip-ng.git
+minizip_url = $(robber_base_url)/minizip-ng.git
 minizip_recipe = meson
 minizip_patches = \
 	$(NULL)
@@ -263,13 +263,13 @@ minizip_deps_for_build = \
 ifeq ($(host_os), $(filter $(host_os),macos ios watchos tvos android qnx))
 minizip_deps += libiconv
 endif
-ifeq ($(FRIDA_LIBC), uclibc)
+ifeq ($(ROBBER_LIBC), uclibc)
 minizip_deps += libiconv
 endif
 
 sqlite_name = SQLite
 sqlite_version = 87e0535610825f01a033948ba24bbe82db108470
-sqlite_url = $(frida_base_url)/sqlite.git
+sqlite_url = $(robber_base_url)/sqlite.git
 sqlite_recipe = meson
 sqlite_patches = \
 	$(NULL)
@@ -282,7 +282,7 @@ sqlite_deps_for_build = \
 
 libunwind_name = libunwind
 libunwind_version = ccd3a38597a8397a3382e4e58fdabb26a6f0be13
-libunwind_url = $(frida_base_url)/libunwind.git
+libunwind_url = $(robber_base_url)/libunwind.git
 libunwind_recipe = meson
 libunwind_patches = \
 	$(NULL)
@@ -304,7 +304,7 @@ libunwind_deps_for_build = \
 
 glib_networking_name = glib-networking
 glib_networking_version = 65774565534e4430e631452af39acb279f4ce911
-glib_networking_url = $(frida_base_url)/glib-networking.git
+glib_networking_url = $(robber_base_url)/glib-networking.git
 glib_networking_recipe = meson
 glib_networking_patches = \
 	$(NULL)
@@ -323,7 +323,7 @@ glib_networking_deps_for_build = \
 
 libnice_name = libnice
 libnice_version = 3c9e960fdb79229b672cbd9e600b4a4f1346409e
-libnice_url = $(frida_base_url)/libnice.git
+libnice_url = $(robber_base_url)/libnice.git
 libnice_recipe = meson
 libnice_patches = \
 	$(NULL)
@@ -344,7 +344,7 @@ libnice_deps_for_build = \
 
 usrsctp_name = usrsctp
 usrsctp_version = 42627714785294aef2bb31851bdeef5db15f5802
-usrsctp_url = $(frida_base_url)/usrsctp.git
+usrsctp_url = $(robber_base_url)/usrsctp.git
 usrsctp_recipe = meson
 usrsctp_patches = \
 	$(NULL)
@@ -360,7 +360,7 @@ usrsctp_deps_for_build = \
 
 libgee_name = libgee
 libgee_version = b1db8f4e0ff72583e5f10205a6512befffa7b541
-libgee_url = $(frida_base_url)/libgee.git
+libgee_url = $(robber_base_url)/libgee.git
 libgee_recipe = meson
 libgee_patches = \
 	$(NULL)
@@ -376,7 +376,7 @@ libgee_deps_for_build = \
 
 json_glib_name = JSON-GLib
 json_glib_version = 2b6b009cf138ac1cbc020e750d415c181a6947fe
-json_glib_url = $(frida_base_url)/json-glib.git
+json_glib_url = $(robber_base_url)/json-glib.git
 json_glib_recipe = meson
 json_glib_patches = \
 	$(NULL)
@@ -394,7 +394,7 @@ json_glib_deps_for_build = \
 
 libpsl_name = libpsl
 libpsl_version = 579d32b7daf5a0ab1d1fef2d7e15066f52d8d026
-libpsl_url = $(frida_base_url)/libpsl.git
+libpsl_url = $(robber_base_url)/libpsl.git
 libpsl_recipe = meson
 libpsl_patches = \
 	$(NULL)
@@ -410,7 +410,7 @@ libpsl_deps_for_build = \
 
 libxml2_name = libxml2
 libxml2_version = f09ad5551829b7f2df3666759e701644a0ea8558
-libxml2_url = $(frida_base_url)/libxml2.git
+libxml2_url = $(robber_base_url)/libxml2.git
 libxml2_recipe = meson
 libxml2_patches = \
 	$(NULL)
@@ -426,7 +426,7 @@ libxml2_deps_for_build = \
 
 nghttp2_name = nghttp2
 nghttp2_version = 91a1324cc5bcedbf7cd9a51a61427b362ee08109
-nghttp2_url = $(frida_base_url)/nghttp2.git
+nghttp2_url = $(robber_base_url)/nghttp2.git
 nghttp2_recipe = meson
 nghttp2_patches = \
 	$(NULL)
@@ -439,7 +439,7 @@ nghttp2_deps_for_build = \
 
 libsoup_name = libsoup
 libsoup_version = c708c48810fa43f009d66a517269b6be4c81786f
-libsoup_url = $(frida_base_url)/libsoup.git
+libsoup_url = $(robber_base_url)/libsoup.git
 libsoup_recipe = meson
 libsoup_patches = \
 	$(NULL)
@@ -467,7 +467,7 @@ libsoup_deps_for_build = \
 
 capstone_name = Capstone
 capstone_version = 22d317042ee4d251280d2960f5cf294433977db4
-capstone_url = $(frida_base_url)/capstone.git
+capstone_url = $(robber_base_url)/capstone.git
 capstone_recipe = meson
 capstone_patches = \
 	$(NULL)
@@ -491,7 +491,7 @@ capstone_archs := $(shell echo $(host_arch) | sed $(sed_regex_option) \
 
 quickjs_name = QuickJS
 quickjs_version = a3303a2bec40fb55df6de5e94e53a7a67e7dbfb0
-quickjs_url = $(frida_base_url)/quickjs.git
+quickjs_url = $(robber_base_url)/quickjs.git
 quickjs_recipe = meson
 quickjs_patches = \
 	$(NULL)
@@ -508,7 +508,7 @@ quickjs_deps_for_build = \
 
 tinycc_name = TinyCC
 tinycc_version = a438164dd4c453ae62c1224b4b7997507a388b3d
-tinycc_url = $(frida_base_url)/tinycc.git
+tinycc_url = $(robber_base_url)/tinycc.git
 tinycc_recipe = meson
 tinycc_patches = \
 	$(NULL)
@@ -521,7 +521,7 @@ tinycc_deps_for_build = \
 
 openssl_name = OpenSSL
 openssl_version = bcb2d5a58ff3c3c6098eedd8bc77895ad27fed0e
-openssl_url = $(frida_base_url)/openssl.git
+openssl_url = $(robber_base_url)/openssl.git
 openssl_recipe = meson
 openssl_patches = \
 	$(NULL)
@@ -535,13 +535,13 @@ openssl_deps_for_build = \
 
 v8_name = V8
 v8_version = bda4a1a3ccc6231a389caebe309fc20fd7cf1650
-v8_url = $(frida_base_url)/v8.git
+v8_url = $(robber_base_url)/v8.git
 v8_recipe = meson
 v8_patches = \
 	$(NULL)
 v8_options = \
 	-Ddebug=false \
-	-Dembedder_string=-frida \
+	-Dembedder_string=-robber \
 	-Dsnapshot_compression=disabled \
 	-Dpointer_compression=disabled \
 	-Dshared_ro_heap=disabled \
@@ -555,7 +555,7 @@ v8_deps_for_build = \
 
 libcxx_name = libc++
 libcxx_version = 2cd34c97d4c79aa45178ebb02734feb7074b7d61
-libcxx_url = $(frida_base_url)/libcxx.git
+libcxx_url = $(robber_base_url)/libcxx.git
 libcxx_recipe = meson
 libcxx_patches = \
 	$(NULL)
@@ -609,7 +609,7 @@ build/$2-%/manifest/$1.pkg: build/$2-env-%.rc deps/.$1-stamp \
 			--prefix "$$$$prefix" \
 			--libdir "$$$$prefix/lib" \
 			--default-library static \
-			$$(FRIDA_FLAGS_BOTTLE) \
+			$$(ROBBER_FLAGS_BOTTLE) \
 			$$($$(subst -,_,$1)_options) \
 			$$$$builddir \
 			deps/$1 \

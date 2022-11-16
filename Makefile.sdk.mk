@@ -2,8 +2,8 @@ include config.mk
 include releng/deps.mk
 
 
-ifeq ($(FRIDA_V8), auto)
-FRIDA_V8 := $(shell echo $(host_machine) | grep -Evq "^(linux-mips|qnx-)" && echo "enabled" || echo "disabled")
+ifeq ($(ROBBER_V8), auto)
+ROBBER_V8 := $(shell echo $(host_machine) | grep -Evq "^(linux-mips|qnx-)" && echo "enabled" || echo "disabled")
 endif
 
 
@@ -45,10 +45,10 @@ ifeq ($(host_os), android)
 packages += selinux
 endif
 
-ifneq ($(FRIDA_V8), disabled)
+ifneq ($(ROBBER_V8), disabled)
 packages += v8
 ifeq ($(host_os), $(filter $(host_os), macos ios watchos tvos))
-ifeq ($(FRIDA_ASAN), no)
+ifeq ($(ROBBER_ASAN), no)
 packages += libcxx
 endif
 endif
@@ -65,7 +65,7 @@ all: build/sdk-$(host_machine).tar.bz2
 	@echo ""
 	@echo -e "\\033[0;32mSuccess"'!'"\\033[0;39m Here's your SDK: \\033[1m$<\\033[0m"
 	@echo ""
-	@echo "It will be picked up automatically if you now proceed to build Frida."
+	@echo "It will be picked up automatically if you now proceed to build Robber."
 	@echo ""
 
 clean: $(foreach pkg, $(call expand-packages,$(packages)), clean-$(pkg))
@@ -113,7 +113,7 @@ build/fs-tmp-%/.package-stamp: $(foreach pkg, $(packages), build/fs-%/manifest/$
 			share/vala \
 			| tar -C $(shell pwd)/$(@D)/package -xf -
 	@releng/pkgify.sh "$(@D)/package" "$(shell pwd)/build/fs-$*" "$(shell pwd)/releng"
-	@echo "$(frida_deps_version)" > $(@D)/package/VERSION.txt
+	@echo "$(robber_deps_version)" > $(@D)/package/VERSION.txt
 	@touch $@
 
 
@@ -128,12 +128,12 @@ build/fs-env-%.rc:
 	fi; \
 	for os_arch in $(build_machine) $*; do \
 		if [ ! -f build/fs-env-$$os_arch.rc ]; then \
-			FRIDA_HOST=$$os_arch \
-			FRIDA_CROSS=$$cross \
-			FRIDA_ASAN=$(FRIDA_ASAN) \
-			FRIDA_ENV_NAME=fs \
-			FRIDA_ENV_SDK=none \
-			FRIDA_TOOLCHAIN_VERSION=$(frida_bootstrap_version) \
+			ROBBER_HOST=$$os_arch \
+			ROBBER_CROSS=$$cross \
+			ROBBER_ASAN=$(ROBBER_ASAN) \
+			ROBBER_ENV_NAME=fs \
+			ROBBER_ENV_SDK=none \
+			ROBBER_TOOLCHAIN_VERSION=$(robber_bootstrap_version) \
 			XCODE11="$(XCODE11)" \
 			./releng/setup-env.sh || exit 1; \
 		fi \

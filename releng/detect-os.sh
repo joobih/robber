@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -n "$FRIDA_BUILD_OS" ]; then
-  echo $FRIDA_BUILD_OS
+if [ -n "$ROBBER_BUILD_OS" ]; then
+  echo $ROBBER_BUILD_OS
   exit 0
 fi
 

@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1A424DA8-5C62-4AEA-A1A9-465359E0C17D}</ProjectGuid>
+    <ProjectGuid>{9EF5A94D-9907-4E7A-98E5-B03CB1750740}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>fridacoreexample</RootNamespace>
+    <RootNamespace>robbergumexample</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -146,10 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="frida-core-example.c" />
+    <ClCompile Include="robber-gum-example.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="frida-core.h" />
+    <ClInclude Include="robber-gum.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

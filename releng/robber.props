@@ -2,33 +2,33 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir>$(SolutionDir)build\frida-windows\$(PlatformName)-$(Configuration)\bin\</OutDir>
+    <OutDir>$(SolutionDir)build\robber-windows\$(PlatformName)-$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)build\tmp-windows\$(PlatformName)-$(Configuration)\$(ProjectName)\</IntDir>
-    <FridaGumDefines>G_LOG_DOMAIN=&quot;Frida&quot;;GLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_56;G_DISABLE_DEPRECATED;HAVE_WINDOWS=1;HAVE_I386=1;HAVE_GIOOPENSSL=1;HAVE_GUMPP=1;HAVE_GUMJS=1;HAVE_FRIDA_GLIB=1;HAVE_FRIDA_LIBFFI=1;HAVE_QUICKJS=1;HAVE_TINYCC=1;HAVE_SQLITE=1;HAVE_OBJC_BRIDGE=1;HAVE_SWIFT_BRIDGE=1;HAVE_JAVA_BRIDGE=1</FridaGumDefines>
-    <FridaCoreDefines>G_LOG_DOMAIN=&quot;Frida&quot;;GLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_56;G_DISABLE_DEPRECATED;HAVE_WINDOWS=1;HAVE_I386=1;HAVE_GIOOPENSSL=1;HAVE_NICE=1;VALA_EXTERN=extern</FridaCoreDefines>
-    <FridaCoreValaFlags>-D WINDOWS -D HAVE_GIOOPENSSL -D HAVE_NICE</FridaCoreValaFlags>
-    <FridaV8>Enabled</FridaV8>
+    <RobberGumDefines>G_LOG_DOMAIN=&quot;Robber&quot;;GLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_56;G_DISABLE_DEPRECATED;HAVE_WINDOWS=1;HAVE_I386=1;HAVE_GIOOPENSSL=1;HAVE_GUMPP=1;HAVE_GUMJS=1;HAVE_ROBBER_GLIB=1;HAVE_ROBBER_LIBFFI=1;HAVE_QUICKJS=1;HAVE_TINYCC=1;HAVE_SQLITE=1;HAVE_OBJC_BRIDGE=1;HAVE_SWIFT_BRIDGE=1;HAVE_JAVA_BRIDGE=1</RobberGumDefines>
+    <RobberCoreDefines>G_LOG_DOMAIN=&quot;Robber&quot;;GLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_56;G_DISABLE_DEPRECATED;HAVE_WINDOWS=1;HAVE_I386=1;HAVE_GIOOPENSSL=1;HAVE_NICE=1;VALA_EXTERN=extern</RobberCoreDefines>
+    <RobberCoreValaFlags>-D WINDOWS -D HAVE_GIOOPENSSL -D HAVE_NICE</RobberCoreValaFlags>
+    <RobberV8>Enabled</RobberV8>
     <Python>python</Python>
     <PythonLocation Condition="'$(PythonLocation)'=='' AND '$(Platform)'=='x64'">$(ProgramFiles)\Python310</PythonLocation>
     <PythonLocation Condition="'$(PythonLocation)'=='' AND '$(Platform)'=='Win32'">$(MSBuildProgramFiles32)\Python310</PythonLocation>
     <GLibGenmarshal>python $(SolutionDir)build\toolchain-windows\bin\glib-genmarshal</GLibGenmarshal>
     <GLibMkenums>python $(SolutionDir)build\toolchain-windows\bin\glib-mkenums</GLibMkenums>
     <ValaCompiler>$(SolutionDir)build\toolchain-windows\bin\valac-0.58.exe</ValaCompiler>
-    <ValaFlags>--target-glib=2.56 --vapidir="$(SolutionDir)frida-core\vapi" --vapidir="$(SolutionDir)frida-gum\vapi" --vapidir="$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\share\vala\vapi"</ValaFlags>
+    <ValaFlags>--target-glib=2.56 --vapidir="$(SolutionDir)robber-core\vapi" --vapidir="$(SolutionDir)robber-gum\vapi" --vapidir="$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\share\vala\vapi"</ValaFlags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)'=='Win32'">
-    <FridaCoreValaFlags>-D X86 $(FridaCoreValaFlags)</FridaCoreValaFlags>
+    <RobberCoreValaFlags>-D X86 $(RobberCoreValaFlags)</RobberCoreValaFlags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)'=='x64'">
-    <FridaCoreValaFlags>-D X86_64 $(FridaCoreValaFlags)</FridaCoreValaFlags>
+    <RobberCoreValaFlags>-D X86_64 $(RobberCoreValaFlags)</RobberCoreValaFlags>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(FridaV8)'=='Enabled'">
-    <FridaCoreValaFlags>-D HAVE_V8 $(FridaCoreValaFlags)</FridaCoreValaFlags>
+  <PropertyGroup Condition="'$(RobberV8)'=='Enabled'">
+    <RobberCoreValaFlags>-D HAVE_V8 $(RobberCoreValaFlags)</RobberCoreValaFlags>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <ForcedIncludeFiles>$(SolutionDir)build\tmp-windows\frida-version.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(IntDir);$(IntDir)..\gum-32;$(IntDir)..\gum-64;$(SolutionDir)frida-gum;$(SolutionDir)frida-gum\libs;$(SolutionDir)frida-gum\bindings;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\quickjs;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\v8-10.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\v8-10.0\v8;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\libsoup-3.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\capstone;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\json-glib-1.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\gee-0.8;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\minizip;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\nice;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\gio-win32-2.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\lib\glib-2.0\include;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\glib-2.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(SolutionDir)build\tmp-windows\robber-version.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(IntDir);$(IntDir)..\gum-32;$(IntDir)..\gum-64;$(SolutionDir)robber-gum;$(SolutionDir)robber-gum\libs;$(SolutionDir)robber-gum\bindings;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\quickjs;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\v8-10.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\v8-10.0\v8;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\libsoup-3.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\capstone;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\json-glib-1.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\gee-0.8;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\minizip;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\nice;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\gio-win32-2.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\lib\glib-2.0\include;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include\glib-2.0;$(SolutionDir)build\sdk-windows\$(Platform)-$(Configuration)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level4</WarningLevel>
       <DisableSpecificWarnings>4100;4127;4201;4204;4244;4302;4305;4311;4702;4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>PSAPI_VERSION=1;WIN32;_WINDOWS;WINVER=0x0501;_WIN32_WINNT=0x0501;GUM_STATIC;FFI_STATIC_BUILD;V8_GN_HEADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>

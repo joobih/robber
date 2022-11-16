@@ -11,7 +11,7 @@ ROOT_DIR = RELENG_DIR.parent
 
 
 @dataclass
-class FridaVersion:
+class RobberVersion:
     name: str
     major: int
     minor: int
@@ -20,7 +20,7 @@ class FridaVersion:
     commit: str
 
 
-def detect() -> FridaVersion:
+def detect() -> RobberVersion:
     description = subprocess.run(["git", "describe", "--tags", "--always", "--long"],
                                  cwd=ROOT_DIR,
                                  capture_output=True,
@@ -47,7 +47,7 @@ def detect() -> FridaVersion:
     else:
         version_name = f"{major}.{minor}.{micro}-dev.{nano - 1}"
 
-    return FridaVersion(version_name, major, minor, micro, nano, commit)
+    return RobberVersion(version_name, major, minor, micro, nano, commit)
 
 
 if __name__ == "__main__":

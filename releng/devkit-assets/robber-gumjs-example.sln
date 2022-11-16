@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "frida-gumjs-example", "frida-gumjs-example.vcxproj", "{30827938-6C79-4226-8A2F-22154CD45F5B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "robber-gumjs-example", "robber-gumjs-example.vcxproj", "{30827938-6C79-4226-8A2F-22154CD45F5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

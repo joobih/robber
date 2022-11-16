@@ -19,12 +19,12 @@ else
 export_ldflags := -Wl,--version-script,$(shell pwd)/build/ft-executable.version
 endif
 
-frida_env_config := \
-	FRIDA_EXTRA_LDFLAGS="$(export_ldflags)" \
-	FRIDA_ASAN=$(FRIDA_ASAN) \
-	FRIDA_ENV_NAME=ft \
-	FRIDA_ENV_SDK=none \
-	FRIDA_TOOLCHAIN_VERSION=$(frida_bootstrap_version) \
+robber_env_config := \
+	ROBBER_EXTRA_LDFLAGS="$(export_ldflags)" \
+	ROBBER_ASAN=$(ROBBER_ASAN) \
+	ROBBER_ENV_NAME=ft \
+	ROBBER_ENV_SDK=none \
+	ROBBER_TOOLCHAIN_VERSION=$(robber_bootstrap_version) \
 	XCODE11="$(XCODE11)"
 
 
@@ -35,7 +35,7 @@ all: build/toolchain-$(host_machine).tar.bz2
 	@echo -e "\\033[0;32mSuccess"'!'"\\033[0;39m Here's your toolchain: \\033[1m$<\\033[0m"
 	@echo ""
 	@if [ $$host_machine = $$build_machine ]; then \
-		echo "It will be picked up automatically if you now proceed to build Frida."; \
+		echo "It will be picked up automatically if you now proceed to build Robber."; \
 		echo ""; \
 	fi
 
@@ -93,7 +93,7 @@ build/ft-tmp-%/.package-stamp: build/ft-env-%.rc $(foreach pkg, $(packages), bui
 			. | tar -C $(shell pwd)/$(@D)/package -xf -
 	@rm -rf $(@D)/package/libdata
 	@releng/pkgify.sh "$(@D)/package" "$(shell pwd)/build/ft-$*" "$(shell pwd)/releng"
-	@echo "$(frida_deps_version)" > $(@D)/package/VERSION.txt
+	@echo "$(robber_deps_version)" > $(@D)/package/VERSION.txt
 	@touch $@
 
 
@@ -109,7 +109,7 @@ deps/.ninja-stamp:
 build/ft-%/manifest/ninja.pkg: build/ft-env-%.rc deps/.ninja-stamp
 	@if [ $* != $(build_machine) ]; then \
 		$(MAKE) -f Makefile.toolchain.mk \
-			FRIDA_HOST=$(build_machine) \
+			ROBBER_HOST=$(build_machine) \
 			build/ft-$(build_machine)/manifest/ninja.pkg || exit 1; \
 	fi
 	@$(call print-status,ninja,Building for $*)
@@ -158,14 +158,14 @@ build/ft-env-%.rc: build/ft-executable.symbols build/ft-executable.version
 	fi; \
 	for machine in $(build_machine) $*; do \
 		if [ ! -f build/ft-env-$$machine.rc ]; then \
-			FRIDA_HOST=$$machine FRIDA_CROSS=$$cross $(frida_env_config) ./releng/setup-env.sh; \
+			ROBBER_HOST=$$machine ROBBER_CROSS=$$cross $(robber_env_config) ./releng/setup-env.sh; \
 			case $$? in \
 				0) \
 					;; \
 				2) \
 					if [ "$$machine" = "$(build_machine)" ]; then \
 						MAKE=$(MAKE) ./releng/bootstrap-toolchain.sh $$machine || exit 1; \
-						FRIDA_HOST=$$machine FRIDA_CROSS=$$cross $(frida_env_config) ./releng/setup-env.sh || exit 1; \
+						ROBBER_HOST=$$machine ROBBER_CROSS=$$cross $(robber_env_config) ./releng/setup-env.sh || exit 1; \
 					else \
 						exit 1; \
 					fi \

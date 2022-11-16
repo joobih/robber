@@ -1,19 +1,10 @@
-/*
- * To build, set up your Release configuration like this:
- *
- * [Runtime Library]
- * Multi-threaded (/MT)
- *
- * Visit https://frida.re to learn more about Frida.
- */
-
-#include "frida-core.h"
+#include "robber-core.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-static void on_detached (FridaSession * session, FridaSessionDetachReason reason, FridaCrash * crash, gpointer user_data);
-static void on_message (FridaScript * script, const gchar * message, GBytes * data, gpointer user_data);
+static void on_detached (RobberSession * session, RobberSessionDetachReason reason, RobberCrash * crash, gpointer user_data);
+static void on_message (RobberScript * script, const gchar * message, GBytes * data, gpointer user_data);
 static void on_signal (int signo);
 static gboolean stop (gpointer user_data);
 
@@ -24,14 +15,14 @@ main (int argc,
       char * argv[])
 {
   guint target_pid;
-  FridaDeviceManager * manager;
+  RobberDeviceManager * manager;
   GError * error = NULL;
-  FridaDeviceList * devices;
+  RobberDeviceList * devices;
   gint num_devices, i;
-  FridaDevice * local_device;
-  FridaSession * session;
+  RobberDevice * local_device;
+  RobberSession * session;
 
-  frida_init ();
+  robber_init ();
 
   if (argc != 2 || (target_pid = atoi (argv[1])) == 0)
   {
@@ -44,54 +35,54 @@ main (int argc,
   signal (SIGINT, on_signal);
   signal (SIGTERM, on_signal);
 
-  manager = frida_device_manager_new ();
+  manager = robber_device_manager_new ();
 
-  devices = frida_device_manager_enumerate_devices_sync (manager, NULL, &error);
+  devices = robber_device_manager_enumerate_devices_sync (manager, NULL, &error);
   g_assert (error == NULL);
 
   local_device = NULL;
-  num_devices = frida_device_list_size (devices);
+  num_devices = robber_device_list_size (devices);
   for (i = 0; i != num_devices; i++)
   {
-    FridaDevice * device = frida_device_list_get (devices, i);
+    RobberDevice * device = robber_device_list_get (devices, i);
 
-    g_print ("[*] Found device: \"%s\"\n", frida_device_get_name (device));
+    g_print ("[*] Found device: \"%s\"\n", robber_device_get_name (device));
 
-    if (frida_device_get_dtype (device) == FRIDA_DEVICE_TYPE_LOCAL)
+    if (robber_device_get_dtype (device) == ROBBER_DEVICE_TYPE_LOCAL)
       local_device = g_object_ref (device);
 
     g_object_unref (device);
   }
   g_assert (local_device != NULL);
 
-  frida_unref (devices);
+  robber_unref (devices);
   devices = NULL;
 
-  session = frida_device_attach_sync (local_device, target_pid, FRIDA_REALM_NATIVE, NULL, &error);
+  session = robber_device_attach_sync (local_device, target_pid, ROBBER_REALM_NATIVE, NULL, &error);
   if (error == NULL)
   {
-    FridaScript * script;
-    FridaScriptOptions * options;
+    RobberScript * script;
+    RobberScriptOptions * options;
 
     g_signal_connect (session, "detached", G_CALLBACK (on_detached), NULL);
-    if (frida_session_is_detached (session))
+    if (robber_session_is_detached (session))
       goto session_detached_prematurely;
 
     g_print ("[*] Attached\n");
 
-    options = frida_script_options_new ();
-    frida_script_options_set_name (options, "example");
-    frida_script_options_set_runtime (options, FRIDA_SCRIPT_RUNTIME_QJS);
+    options = robber_script_options_new ();
+    robber_script_options_set_name (options, "example");
+    robber_script_options_set_runtime (options, ROBBER_SCRIPT_RUNTIME_QJS);
 
-    script = frida_session_create_script_sync (session,
-        "Interceptor.attach(Module.getExportByName('kernel32.dll', 'CreateFileW'), {\n"
+    script = robber_session_create_script_sync (session,
+        "Interceptor.attach(Module.getExportByName(null, 'open'), {\n"
         "  onEnter(args) {\n"
-        "    console.log(`[*] CreateFileW(\"${args[0].readUtf16String()}\")`);\n"
+        "    console.log(`[*] open(\"${args[0].readUtf8String()}\")`);\n"
         "  }\n"
         "});\n"
-        "Interceptor.attach(Module.getExportByName('kernel32.dll', 'CloseHandle'), {\n"
+        "Interceptor.attach(Module.getExportByName(null, 'close'), {\n"
         "  onEnter(args) {\n"
-        "    console.log(`[*] CloseHandle(${args[0]})`);\n"
+        "    console.log(`[*] close(${args[0].toInt32()})`);\n"
         "  }\n"
         "});",
         options, NULL, &error);
@@ -101,7 +92,7 @@ main (int argc,
 
     g_signal_connect (script, "message", G_CALLBACK (on_message), NULL);
 
-    frida_script_load_sync (script, NULL, &error);
+    robber_script_load_sync (script, NULL, &error);
     g_assert (error == NULL);
 
     g_print ("[*] Script loaded\n");
@@ -111,13 +102,13 @@ main (int argc,
 
     g_print ("[*] Stopped\n");
 
-    frida_script_unload_sync (script, NULL, NULL);
-    frida_unref (script);
+    robber_script_unload_sync (script, NULL, NULL);
+    robber_unref (script);
     g_print ("[*] Unloaded\n");
 
-    frida_session_detach_sync (session, NULL, NULL);
+    robber_session_detach_sync (session, NULL, NULL);
 session_detached_prematurely:
-    frida_unref (session);
+    robber_unref (session);
     g_print ("[*] Detached\n");
   }
   else
@@ -126,10 +117,10 @@ session_detached_prematurely:
     g_error_free (error);
   }
 
-  frida_unref (local_device);
+  robber_unref (local_device);
 
-  frida_device_manager_close_sync (manager, NULL, NULL);
-  frida_unref (manager);
+  robber_device_manager_close_sync (manager, NULL, NULL);
+  robber_unref (manager);
   g_print ("[*] Closed\n");
 
   g_main_loop_unref (loop);
@@ -138,14 +129,14 @@ session_detached_prematurely:
 }
 
 static void
-on_detached (FridaSession * session,
-             FridaSessionDetachReason reason,
-             FridaCrash * crash,
+on_detached (RobberSession * session,
+             RobberSessionDetachReason reason,
+             RobberCrash * crash,
              gpointer user_data)
 {
   gchar * reason_str;
 
-  reason_str = g_enum_to_string (FRIDA_TYPE_SESSION_DETACH_REASON, reason);
+  reason_str = g_enum_to_string (ROBBER_TYPE_SESSION_DETACH_REASON, reason);
   g_print ("on_detached: reason=%s crash=%p\n", reason_str, crash);
   g_free (reason_str);
 
@@ -153,7 +144,7 @@ on_detached (FridaSession * session,
 }
 
 static void
-on_message (FridaScript * script,
+on_message (RobberScript * script,
             const gchar * message,
             GBytes * data,
             gpointer user_data)

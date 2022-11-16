@@ -20,15 +20,15 @@ esac
 for file in $(find "$package" -type f); do
   if grep -q "$prefix" $file; then
     if echo "$file" | grep -Eq "glib-gettextize|gdbus-codegen|/glib-2.0/codegen/|bin/vala-gen-introspect"; then
-      newname="$file.frida.in"
+      newname="$file.robber.in"
       mv "$file" "$newname"
       sed_inplace \
-        -e "s,$prefix,@FRIDA_TOOLROOT@,g" \
-        -e "s,$releng,@FRIDA_RELENG@,g" \
+        -e "s,$prefix,@ROBBER_TOOLROOT@,g" \
+        -e "s,$releng,@ROBBER_RELENG@,g" \
         $newname || exit 1
     elif echo "$file" | grep -Eq "\\.pc$"; then
       sed_inplace \
-        -e "s,$prefix,\${frida_sdk_prefix},g" \
+        -e "s,$prefix,\${robber_sdk_prefix},g" \
         $file || exit 1
     fi
   fi

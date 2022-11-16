@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4AFCE7C4-6D9A-4663-B43C-D2E518486910}</ProjectGuid>
-    <RootNamespace>frida</RootNamespace>
+    <RootNamespace>robber</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -42,25 +42,25 @@
     <ConfigurationType>Utility</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)releng\frida-toolchain.props" />
+  <Import Project="$(SolutionDir)releng\robber-toolchain.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)releng\frida-$(Configuration).props" />
+    <Import Project="$(SolutionDir)releng\robber-$(Configuration).props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)releng\frida-$(Configuration).props" />
+    <Import Project="$(SolutionDir)releng\robber-$(Configuration).props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)releng\frida-$(Configuration).props" />
+    <Import Project="$(SolutionDir)releng\robber-$(Configuration).props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)releng\frida-$(Configuration).props" />
+    <Import Project="$(SolutionDir)releng\robber-$(Configuration).props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -71,32 +71,32 @@
   <ItemGroup>
     <CustomBuild Include="generate-version-header.py">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
-REM. &gt; "$(IntDir)frida-version.stamp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\robber-version.h" || exit 1
+REM. &gt; "$(IntDir)robber-version.stamp"
 </Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating frida-version.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)frida-version.stamp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating robber-version.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)robber-version.stamp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir).git\HEAD</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
-REM. &gt; "$(IntDir)frida-version.stamp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\robber-version.h" || exit 1
+REM. &gt; "$(IntDir)robber-version.stamp"
 </Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating frida-version.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)frida-version.stamp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating robber-version.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)robber-version.stamp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir).git\HEAD</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
-REM. &gt; "$(IntDir)frida-version.stamp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\robber-version.h" || exit 1
+REM. &gt; "$(IntDir)robber-version.stamp"
 </Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating frida-version.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)frida-version.stamp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating robber-version.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)robber-version.stamp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir).git\HEAD</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
-REM. &gt; "$(IntDir)frida-version.stamp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Python) "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\robber-version.h" || exit 1
+REM. &gt; "$(IntDir)robber-version.stamp"
 </Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating frida-version.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)frida-version.stamp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating robber-version.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)robber-version.stamp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir).git\HEAD</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
