@@ -7,3 +7,6 @@
 [submodule "robber-qml"]
 	path = robber-qml
 	url = https://github.com/joobih/robber-qml.git
+[submodule "robber-python"]
+	path = robber-python
+	url = https://github.com/joobih/robber-python.git
