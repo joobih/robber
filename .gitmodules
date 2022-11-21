@@ -19,3 +19,6 @@
 [submodule "robber-tools"]
 	path = robber-tools
 	url = https://github.com/joobih/robber-tools.git
+[submodule "robber-swift"]
+	path = robber-swift
+	url = https://github.com/joobih/robber-swift.git
