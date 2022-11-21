@@ -13,9 +13,9 @@ robber_gum_flags := \
 	-Dgumjs=enabled \
 	-Dv8=$(ROBBER_V8) \
 	-Ddatabase=$(ROBBER_DATABASE) \
-	-Drobber_objc_bridge=$(ROBBER_OBJC_BRIDGE) \
-	-Drobber_swift_bridge=$(ROBBER_SWIFT_BRIDGE) \
-	-Drobber_java_bridge=$(ROBBER_JAVA_BRIDGE) \
+	-Dfrida_objc_bridge=$(ROBBER_OBJC_BRIDGE) \
+	-Dfrida_swift_bridge=$(ROBBER_SWIFT_BRIDGE) \
+	-Dfrida_java_bridge=$(ROBBER_JAVA_BRIDGE) \
 	-Dtests=enabled \
 	$(NULL)
 robber_core_flags := \
