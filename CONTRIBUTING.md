@@ -1076,7 +1076,7 @@ enumerateMatches('exports:' + obj.module + '!' + obj.function);
 ### Rule
 
 Stick to `ES5` syntax, so it can be consumed by the Duktape runtime
-without having to first `robber-compile` the code.
+without having to first `frida-compile` the code.
 
 ### Rule
 

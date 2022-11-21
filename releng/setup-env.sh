@@ -196,7 +196,7 @@ if ! grep -Eq "^$toolchain_version\$" "$ROBBER_TOOLROOT/VERSION.txt" 2>/dev/null
     tar -C "$ROBBER_TOOLROOT" -xjf $local_toolchain || exit 1
   else
     echo -e "Downloading and deploying toolchain for \\033[1m$build_machine\\033[0m..."
-    $download_command "https://build.robber.re/deps/$toolchain_version/$filename" | tar -C "$ROBBER_TOOLROOT" -xjf -
+    $download_command "https://build.frida.re/deps/$toolchain_version/$filename" | tar -C "$ROBBER_TOOLROOT" -xjf -
     if [ $? -ne 0 ]; then
       echo ""
       echo "Bummer. It seems we don't have a prebuilt toolchain for your system."
@@ -232,7 +232,7 @@ if [ "$ROBBER_ENV_SDK" != 'none' ] && ! grep -Eq "^$sdk_version\$" "$ROBBER_SDKR
     tar -C "$ROBBER_SDKROOT" -xjf $local_sdk || exit 1
   else
     echo -e "Downloading and deploying SDK for \\033[1m$host_machine\\033[0m..."
-    $download_command "https://build.robber.re/deps/$sdk_version/$filename" | tar -C "$ROBBER_SDKROOT" -xjf - 2> /dev/null
+    $download_command "https://build.frida.re/deps/$sdk_version/$filename" | tar -C "$ROBBER_SDKROOT" -xjf - 2> /dev/null
     if [ $? -ne 0 ]; then
       echo ""
       echo "Bummer. It seems we don't have a prebuilt SDK for your system."

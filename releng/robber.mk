@@ -37,7 +37,7 @@ robber_tools = \
 	robber-trace \
 	robber-join \
 	robber-create \
-	robber-compile \
+	frida-compile \
 	robber-apk \
 	$(NULL)
 

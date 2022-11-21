@@ -752,7 +752,7 @@ def ensure_bootstrap_toolchain(bootstrap_version: str) -> SourceState:
         source_state = SourceState.PRISTINE
 
     print(f"Downloading bootstrap toolchain {bootstrap_version}...", flush=True)
-    with urllib.request.urlopen(f"https://build.robber.re/deps/{bootstrap_version}/toolchain-windows-x86.exe") as response, \
+    with urllib.request.urlopen(f"https://build.frida.re/deps/{bootstrap_version}/toolchain-windows-x86.exe") as response, \
             tempfile.NamedTemporaryFile(suffix=".exe", delete=False) as archive:
         shutil.copyfileobj(response, archive)
         toolchain_archive_path = archive.name
