@@ -22,3 +22,6 @@
 [submodule "robber-swift"]
 	path = robber-swift
 	url = https://github.com/joobih/robber-swift.git
+[submodule "releng/meson"]
+	path = releng/meson
+	url = https://github.com/joobih/meson.git
